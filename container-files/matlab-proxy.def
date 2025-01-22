@@ -1,0 +1,42 @@
+Bootstrap: yum
+OSVersion: 8.8
+MirrorURL: http://172.28.22.9/install/repos/rhel-%{OSVERSION}-for-x86_64-baseos-eus-rpms 
+Include: yum yum-utils
+
+%setup
+
+%files
+    matlab-deps.txt
+
+%post
+    yum-config-manager --add-repo http://172.28.22.9/install/repos/rhel-8.8-for-x86_64-baseos-eus-rpms
+    yum-config-manager --add-repo http://172.28.22.9/install/repos/rhel-8.8-for-x86_64-appstream-eus-rpms
+    yum-config-manager --add-repo http://172.28.22.9/install/repos/codeready-builder-for-rhel-8.8-x86_64-eus-rpms
+    
+    yum-config-manager --save --setopt=172.28.22.9_install_repos_codeready-builder-for-rhel-8.8-x86_64-eus-rpms.gpgcheck=0
+    yum-config-manager --save --setopt=172.28.22.9_install_repos_rhel-8.8-for-x86_64-baseos-eus-rpms.gpgcheck=0
+    yum-config-manager --save --setopt=172.28.22.9_install_repos_rhel-8.8-for-x86_64-appstream-eus-rpms.gpgcheck=0
+    yum -y update
+    dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+
+    yum -y groupinstall "development tools"
+    yum -y install "vim-enhanced"
+    yum -y groupinstall minimal-environment
+    yum -y install python39 python39-setuptools python39-pip xorg-x11-server-Xvfb
+    yum -y install Lmod
+    yum -y install `cat /matlab-deps.txt`
+    alternatives --set python3 /usr/bin/python3.9
+    alternatives --set python /usr/bin/python3.9
+
+    pip3 install matlab-proxy
+
+    echo "export BUILD_DATE=\"$(date -R)\"" >> $APPTAINER_ENVIRONMENT
+
+%environment
+    export LC_ALL=C
+
+%runscript
+#!/bin/bash
+set -o xtrace
+
+matlab-proxy-app

@@ -25,7 +25,13 @@ attributes:
   #     modules: "python/3.5"
   # @example Using combination of modules
   #     modules: "python/3.5 cuda/8.0.44"
-  
+
+  matlab_version:
+    label: "MATLAB Version"
+    widget: "select"
+    options:
+      - ["2024a","matlab/2024a"]
+
   bc_account:
     label: "Name of account"
     widget: "text_field"
@@ -88,6 +94,7 @@ attributes:
 #   option, then it will not appear in the form page that the user sees in the
 #   Dashboard
 form:
+  - matlab_version
   - bc_account
   - bc_partition
   - bc_duration

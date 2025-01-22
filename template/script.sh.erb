@@ -16,18 +16,26 @@ module load default-s11
 module avail
 
 # Load the required modules
-<%- if context.bc_partition.include? 'gpu' -%>
-module load anaconda3_gpu
-<%- else -%>
-module load anaconda3_cpu
-<%- end -%>
+module load <%= context.matlab_version %>
 
 # List loaded modules
 module list
 
 # Benchmark info
-echo "TIMING - Starting jupyter at: $(date)"
+echo "TIMING - Starting MATLAB at: $(date)"
+
+# Check if we have a GPU
+if [ -n "$CUDA_VISIBLE_DEVICES" ]; then
+	APPTAINER_GPU_ENABLE="--nv"
+else
+	APPTAINER_GPU_ENABLE=""
+fi
 
 # Launch the Jupyter Notebook Server
 set -x
-jupyter-lab --config="${CONFIG_FILE}"
+apptainer exec --cleanenv ${APPTAINER_GPU_ENABLE} \
+	--bind /ime,/scratch,/sw,/u,/taiga,/projects,/work,/etc/profile.d,/etc/cray-pe.d,/opt/cray \
+	--env PATH=${PATH} --env LD_LIBRARY_PATH=${LD_LIBRARY_PATH} --env MLM_LICENSE_FILE=${MLM_LICENSE_FILE} \
+	--env MWI_APP_HOST=${MWI_APP_HOST} --env MWI_APP_PORT=${MWI_APP_PORT} \
+	--env MWI_AUTH_TOKEN=${MWI_AUTH_TOKEN} \
+	/u/yanzhan2/scratch/Delta-OOD-MATLAB/container-files/matlab-proxy.sif matlab-proxy-app
