@@ -1,0 +1,99 @@
+# Batch Connect app configuration file
+#
+# @note Used to define the submitted cluster, title, description, and
+#   hard-coded/user-defined attributes that make up this Batch Connect app.
+---
+
+# **MUST** set cluster id here that matches cluster configuration file located
+# under /etc/ood/config/clusters.d/*.yml
+# @example Use the Owens cluster at Ohio Supercomputer Center
+#     cluster: "owens"
+cluster: "delta"
+
+# Define attribute values that aren't meant to be modified by the user within
+# the Dashboard form
+attributes:
+  # Set the corresponding modules that need to be loaded for Jupyter to run
+  #
+  # @note It is called within the batch job as `module load <modules>` if
+  #   defined
+  # @example Do not load any modules
+  #     modules: ""
+  # @example Using default python module
+  #     modules: "python"
+  # @example Using specific python module
+  #     modules: "python/3.5"
+  # @example Using combination of modules
+  #     modules: "python/3.5 cuda/8.0.44"
+  
+  bc_account:
+    label: "Name of account"
+    widget: "text_field"
+    help: "Chargeable account of the form abcd-delta-cpu or abcd-delta-gpu. Replace abcd with your allocation code."
+    value: ""
+  
+  bc_reservation:
+    label: "Name of reservation (leave empty if none)"
+    widget: "text_field"
+    value: ""
+
+  bc_partition:
+    label: "Partition"
+    widget: "select"
+    value: "cpu-interactive"
+    help: "Interactive partitions are limited to one hour."
+    options:
+      - ["cpu-interactive","cpu-interactive"]
+      - ["gpuA100x4-interactive","gpuA100x4-interactive"]
+      - ["gpuA40x4-interactive","gpuA40x4-interactive"]
+      - ["cpu","cpu"]
+      - ["gpuA100x4","gpuA100x4"]
+      - ["gpuA40x4","gpuA40x4"]
+
+  bc_num_slots:
+    label: "Number of CPUs"
+    widget: "number_field"
+    min: "1"
+
+  bc_num_memory:
+    label: "Amount of RAM"
+    widget: "text_field"
+    help: "Use Slurm format, e.g. 4096M, 10G. If left blank, 1000 MB will be allocated per CPU core requested."
+
+  bc_num_gpus:
+    label: "Number of GPUs"
+    widget: "number_field"
+#    max: "4"
+    min: "0"
+
+  bc_duration:
+    label: "Duration of job"
+    widget: "text_field"
+    help: "Slurm format: DD-HH:MM:SS"
+
+  working_dir:
+    label: "Working Directory"
+    data-filepicker: true
+    data-target-file-type: dirs  # Valid values are: files, dirs, or both
+    readonly: false
+    help: "Select your project directory; defaults to $HOME"
+
+# All of the attributes that make up the Dashboard form (in respective order),
+# and made available to the submit configuration file and the template ERB
+# files
+#
+# @note You typically do not need to modify this unless you want to add a new
+#   configurable value
+# @note If an attribute listed below is hard-coded above in the `attributes`
+#   option, then it will not appear in the form page that the user sees in the
+#   Dashboard
+form:
+  - bc_account
+  - bc_partition
+  - bc_duration
+  - bc_reservation
+  - bc_num_slots
+  - bc_num_memory
+  - bc_num_gpus
+  - bc_email_on_started
+  - working_dir

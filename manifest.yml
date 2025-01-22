@@ -1,0 +1,7 @@
+---
+name: MATLAB
+category: Interactive Apps
+subcategory: MATLAB
+role: batch_connect
+description: |
+  This app will launch MATLAB on one compute node.

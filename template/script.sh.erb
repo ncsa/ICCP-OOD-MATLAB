@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+# Benchmark info
+echo "TIMING - Starting main script at: $(date)"
+
+#
+# Start Jupyter Notebook Server
+#
+
+# Purge the module environment to avoid conflicts
+hostname
+
+module purge
+module load default-s11
+
+module avail
+
+# Load the required modules
+<%- if context.bc_partition.include? 'gpu' -%>
+module load anaconda3_gpu
+<%- else -%>
+module load anaconda3_cpu
+<%- end -%>
+
+# List loaded modules
+module list
+
+# Benchmark info
+echo "TIMING - Starting jupyter at: $(date)"
+
+# Launch the Jupyter Notebook Server
+set -x
+jupyter-lab --config="${CONFIG_FILE}"
