@@ -12,10 +12,12 @@ Include: yum yum-utils
     yum-config-manager --add-repo http://172.28.22.9/install/repos/rhel-8.8-for-x86_64-baseos-eus-rpms
     yum-config-manager --add-repo http://172.28.22.9/install/repos/rhel-8.8-for-x86_64-appstream-eus-rpms
     yum-config-manager --add-repo http://172.28.22.9/install/repos/codeready-builder-for-rhel-8.8-x86_64-eus-rpms
+    yum-config-manager --add-repo http://172.28.22.9/install/repos/slurm
 
     yum-config-manager --save --setopt=172.28.22.9_install_repos_codeready-builder-for-rhel-8.8-x86_64-eus-rpms.gpgcheck=0
     yum-config-manager --save --setopt=172.28.22.9_install_repos_rhel-8.8-for-x86_64-baseos-eus-rpms.gpgcheck=0
     yum-config-manager --save --setopt=172.28.22.9_install_repos_rhel-8.8-for-x86_64-appstream-eus-rpms.gpgcheck=0
+    yum-config-manager --save --setopt=172.28.22.9_install_repos_slurm.gpgcheck=0
     yum -y update
     dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
 
@@ -25,6 +27,11 @@ Include: yum yum-utils
     yum -y install python39 python39-setuptools python39-pip xorg-x11-server-Xvfb
     yum -y install Lmod
     yum -y install `cat /matlab-deps.txt`
+
+    yum -y install slurm-23.11.6
+    groupadd -g 93 slurm
+    useradd -d /var/lib/slurm -u 93 -g slurm slurm
+
     alternatives --set python3 /usr/bin/python3.9
     alternatives --set python /usr/bin/python3.9
 
