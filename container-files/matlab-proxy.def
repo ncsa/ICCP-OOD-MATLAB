@@ -1,6 +1,6 @@
 Bootstrap: yum
-OSVersion: 8.8
-MirrorURL: http://172.28.22.9/install/repos/rhel-%{OSVERSION}-for-x86_64-baseos-eus-rpms
+OSVersion: 9.4.0
+MirrorURL: http://172.29.128.19/install/repos/rhels%{OSVERSION}/x86_64/repos/rhel-9-for-x86_64-baseos-eus-rpms
 Include: yum yum-utils
 
 %setup
@@ -9,17 +9,17 @@ Include: yum yum-utils
     matlab-deps.txt
 
 %post
-    yum-config-manager --add-repo http://172.28.22.9/install/repos/rhel-8.8-for-x86_64-baseos-eus-rpms
-    yum-config-manager --add-repo http://172.28.22.9/install/repos/rhel-8.8-for-x86_64-appstream-eus-rpms
-    yum-config-manager --add-repo http://172.28.22.9/install/repos/codeready-builder-for-rhel-8.8-x86_64-eus-rpms
-    yum-config-manager --add-repo http://172.28.22.9/install/repos/slurm
+    yum-config-manager --add-repo http://172.29.128.19/install/repos/rhels9.4.0/x86_64/repos/rhel-9-for-x86_64-baseos-eus-rpms
+    yum-config-manager --add-repo http://172.29.128.19/install/repos/rhels9.4.0/x86_64/repos/rhel-9-for-x86_64-appstream-eus-rpms
+    yum-config-manager --add-repo http://172.29.128.19/install/repos/rhels9.4.0/x86_64/repos/codeready-builder-for-rhel-9-x86_64-eus-rpms
+    yum-config-manager --add-repo http://172.29.128.19/install/repos/general/x86_64/slurm
 
-    yum-config-manager --save --setopt=172.28.22.9_install_repos_codeready-builder-for-rhel-8.8-x86_64-eus-rpms.gpgcheck=0
-    yum-config-manager --save --setopt=172.28.22.9_install_repos_rhel-8.8-for-x86_64-baseos-eus-rpms.gpgcheck=0
-    yum-config-manager --save --setopt=172.28.22.9_install_repos_rhel-8.8-for-x86_64-appstream-eus-rpms.gpgcheck=0
-    yum-config-manager --save --setopt=172.28.22.9_install_repos_slurm.gpgcheck=0
+    yum-config-manager --save --setopt=172.29.128.19_install_repos_codeready-builder-for-rhel-9-x86_64-eus-rpms.gpgcheck=0
+    yum-config-manager --save --setopt=172.29.128.19_install_repos_rhel-9-for-x86_64-baseos-eus-rpms.gpgcheck=0
+    yum-config-manager --save --setopt=172.29.128.19_install_repos_rhel-9-for-x86_64-appstream-eus-rpms.gpgcheck=0
+    yum-config-manager --save --setopt=172.29.128.19_install_repos_slurm.gpgcheck=0
     yum -y update
-    dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+    dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
 
     yum -y groupinstall "development tools"
     yum -y install "vim-enhanced"
@@ -28,7 +28,7 @@ Include: yum yum-utils
     yum -y install Lmod
     yum -y install `cat /matlab-deps.txt`
 
-    yum -y install slurm-23.11.6
+    yum -y install slurm-24.05.3
     groupadd -g 93 slurm
     useradd -d /var/lib/slurm -u 93 -g slurm slurm
 
